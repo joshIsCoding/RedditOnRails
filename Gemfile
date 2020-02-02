@@ -48,6 +48,8 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'pry-rails'
+  # get spring to talk to RSpec
+  gem 'spring-commands-rspec'
 end
 
 group :test do
