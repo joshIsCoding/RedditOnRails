@@ -1,0 +1,10 @@
+<form action="<%= mode == :login ? session_url : users_url %>" method = "post">
+  <%= csrf_token %>
+  <label for="user_username">USERNAME</label>
+  <input id="user_username" type="text" name="user[username]">
+
+  <label for="user_password">PASSWORD</label>
+  <input id="user_password" type="password" name="user[password]">
+
+  <input type="submit" value="<%= mode == :login ? "SIGN IN" : "SIGN UP" %>">
+</form>
