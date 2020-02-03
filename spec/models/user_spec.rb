@@ -15,6 +15,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_presence_of(:password).allow_nil }
   end
 
+  describe "Associations" do
+    it { is_expected.to have_many(:subs) }
+  end
+
   describe "Methods" do
     describe "has_password?(password)" do
       context "when the correct password is provided" do
