@@ -6,6 +6,8 @@ class User < ApplicationRecord
   after_initialize :ensure_session_token
   attr_reader :password
 
+  has_many :subs
+
   def self.find_by_credentials(username, password)
     user = self.find_by(username: username)
     return user if user && user.has_password?(password)
