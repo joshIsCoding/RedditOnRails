@@ -1,2 +1,5 @@
 <h1>Users#new</h1>
+<% if flash[:errors] %>
+<%= render "shared/notices", notices: flash[:errors], type: :error %>
+<% end %>
 <%= render "shared/user_form", mode: :register %>
