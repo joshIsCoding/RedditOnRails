@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root 'home#index'
   resources :users, only: [:create]
   resource :session, only: [:create, :destroy]
   get "register", to: "users#new"
