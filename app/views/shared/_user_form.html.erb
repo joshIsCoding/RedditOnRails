@@ -1,4 +1,4 @@
-<form action="<%= mode == :login ? session_url : users_url %>" method = "post">
+<form class="<%= "user #{mode}" %>" action="<%= mode == :login ? session_url : users_url %>" method = "post">
   <%= csrf_token %>
   <label for="user_username">USERNAME</label>
   <input id="user_username" type="text" name="user[username]">
