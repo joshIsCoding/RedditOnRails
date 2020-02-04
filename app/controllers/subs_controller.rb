@@ -17,6 +17,7 @@ class SubsController < ApplicationController
   end
 
   def index
+    @subs = Sub.all ? Sub.all : []
   end
 
   def destroy
