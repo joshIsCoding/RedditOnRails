@@ -1,4 +1,5 @@
 class SubsController < ApplicationController
+  skip_before_action :require_login, only: [:index, :show]
   def new
   end
 
@@ -12,6 +13,7 @@ class SubsController < ApplicationController
   end
 
   def show
+    @sub = Sub.find_by_id(params[:id])
   end
 
   def index
