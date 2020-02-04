@@ -1,6 +1,10 @@
 require 'support/auth_helper'
 require 'rails_helper'
 
+RSpec.configure do |c|
+  c.include AuthHelper
+end
+
 RSpec.describe "User Authentication", type: :system do
   let(:main_user) { User.create!(username: "Main_user", password: "test_pass")}
   let(:other_user) { User.create!(username: "Other_user", password: "test_pass")}
