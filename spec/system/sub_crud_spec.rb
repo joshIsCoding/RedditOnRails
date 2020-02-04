@@ -12,6 +12,7 @@ RSpec.describe "User Authentication", type: :system do
   describe "Sub#show" do
     let!(:show_sub) do 
       Sub.create!(
+        name: "Shows",
         title: "Shows", 
         description: "For talking about shows",
         moderator: main_user
@@ -40,7 +41,9 @@ RSpec.describe "User Authentication", type: :system do
     let!(:subs) do 
       subs = (1..3)
       subs.map do |i| 
-        Sub.create!(title: "sub_#{i}", 
+        Sub.create!(
+          name: "sub_#{i}", 
+          title: "sub_#{i}", 
           description: "description_#{i}", 
           moderator: other_user 
         )
