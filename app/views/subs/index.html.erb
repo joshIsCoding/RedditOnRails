@@ -1,2 +1,9 @@
 <h1>Subs#index</h1>
-<p>Find me in app/views/subs/index.html.erb</p>
+
+<% @subs.each do |sub| %>
+<article>
+<header><h5><%= link_to sub.title, sub_url(sub) %></h5></header>
+<p><%= sub.description %></p>
+<footer></footer>
+</article>
+<% end %>
