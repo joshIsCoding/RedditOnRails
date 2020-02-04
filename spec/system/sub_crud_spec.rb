@@ -33,14 +33,36 @@ RSpec.describe "User Authentication", type: :system do
   end
 
   describe "Sub#index" do
-    
-    context "when not logged in" do
-      it "shows all subs"
+    let!(:subs) do 
+      subs = (1..3)
+      subs.map do |i| 
+        Sub.create!(title: "sub_#{i}", 
+          description: "description_#{i}", 
+          moderator: other_user 
+        )
+      end
     end
+    
+      context "when not logged in" do
+        it "shows all subs" do
+          visit(subs_path)
+          subs.each do |sub|
+            expect(page).to have_link(sub.title, href: /#{sub_path(sub)}$/)
+            expect(page).to have_content(sub.description)
+          end
+        end
+      end
 
     context "when logged in" do
-      it "shows all subs"
+      it "shows all subs" do
+        login(main_user)
+        visit(subs_path)
+        subs.each do |sub|
+          expect(page).to have_link(sub.title, href: /#{sub_path(sub)}$/)
+          expect(page).to have_content(sub.description)
+        end
+      end
     end
+  
   end
-
 end
