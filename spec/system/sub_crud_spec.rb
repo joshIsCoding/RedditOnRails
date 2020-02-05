@@ -118,7 +118,7 @@ RSpec.describe "User Authentication", type: :system do
         it "refreshes the form with error messages" do
           create_sub(invalid_sub)
           expect(page).to have_content("cannot contain spaces")
-          expect(page).to have_content("description cannot be")
+          expect(page).to have_content("Description can't be blank")
         end
       end
       
