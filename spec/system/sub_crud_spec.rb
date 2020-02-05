@@ -138,13 +138,13 @@ RSpec.describe "User Authentication", type: :system do
       before(:each) { login(main_user) }
       it "doesn't provide an edit button on the sub page" do
         visit(sub_path(update_sub))
-        expect(page).not_to have_button("EDIT SUB")
+        expect(page).not_to have_link("EDIT", href: /#{edit_sub_path(update_sub)}$/)
       end
 
       it "doesn't permit access to the edit form via the url" do
         visit(edit_sub_path(update_sub))
         expect(page).not_to have_button("SAVE")
-        expect(page).not_to have_current_path(sub_path(update_sub))
+        expect(page).not_to have_current_path(edit_sub_path(update_sub))
       end
     end
 
@@ -152,7 +152,7 @@ RSpec.describe "User Authentication", type: :system do
       it "allows the mod to update their sub from the sub page" do
         login(other_user)
         visit(sub_path(update_sub))
-        click_button("EDIT SUB")
+        click_link("EDIT")
         new_description = "Only other_user can update this sub."
         fill_in "sub_description", with: new_description
         click_button("SAVE")
