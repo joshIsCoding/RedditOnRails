@@ -124,4 +124,41 @@ RSpec.describe "User Authentication", type: :system do
       
     end
   end
+
+  describe "Sub Updates" do
+    let!(:update_sub) do
+      Sub.create!(
+        name: "UpdateSub",
+        title: "Update This Sub...",
+        description: "Only the mod can update this sub.",
+        moderator: other_user
+      )
+    end
+    context "when the user is not the sub moderator" do
+      before(:each) { login(main_user) }
+      it "doesn't provide an edit button on the sub page" do
+        visit(sub_path(update_sub))
+        expect(page).not_to have_button("EDIT SUB")
+      end
+
+      it "doesn't permit access to the edit form via the url" do
+        visit(edit_sub_path(update_sub))
+        expect(page).not_to have_button("SAVE")
+        expect(page).not_to have_current_path(sub_path(update_sub))
+      end
+    end
+
+    context "when the user is the sub moderator" do
+      it "allows the mod to update their sub from the sub page" do
+        login(other_user)
+        visit(sub_path(update_sub))
+        click_button("EDIT SUB")
+        new_description = "Only other_user can update this sub."
+        fill_in "sub_description", with: new_description
+        click_button("SAVE")
+        expect(page).to have_content(new_description)
+        expect(page).to have_current_path(sub_path(update_sub))
+      end
+    end
+  end
 end
