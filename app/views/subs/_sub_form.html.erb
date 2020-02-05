@@ -4,15 +4,16 @@
   <% end %>
   <label for="sub_name">name</label>
   <label for="sub_name">No spaces, e.g., "books" or "bookclub". Once chosen, this name cannot be changed.</label>
-  <input id="sub_name" type="text" name="sub[name]">
+  <input id="sub_name" type="text" name="sub[name]" value="<%= @sub.name %>">
 
   <label for="sub_title">title</label>
   <label for="sub_title">e.g., Books: made from trees or pixels.</label>
-  <input id="sub_title" type="text" name="sub[title]">
+  <input id="sub_title" type="text" name="sub[title]" value="<%= @sub.title %>">
 
   <label for="sub_description">description</label>
   <label for="sub_description">Appears in search results and social media links. 500 characters max.</label>
-  <input id="sub_description" type="text" name="sub[description]">
-
-  <input type="submit" value="CREATE">
+  <textarea id="sub_description" name="sub[description]">
+    <%= @sub.description %>
+  </textarea>
+  <input type="submit" value="<%= @sub.persisted? ? "SAVE" : "CREATE" %>">
 </form>
