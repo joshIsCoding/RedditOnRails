@@ -32,4 +32,8 @@ class ApplicationController < ActionController::Base
   def already_logged_in
     redirect_to :root if logged_in?
   end
+
+  def render_not_found
+      raise ActionController::RoutingError.new('Page not found')
+   end
 end
