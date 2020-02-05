@@ -1,5 +1,6 @@
 <header class="sub_header">
   <h1><%= @sub.title %></h1>
   <p><%= @sub.name %></p>
+  <%= link_to("EDIT", edit_sub_url(@sub)) if @sub.moderator == current_user %>
 </header>
 <p><%= @sub.description %></p>
