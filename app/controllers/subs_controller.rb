@@ -30,6 +30,7 @@ class SubsController < ApplicationController
 
   def show
     get_sub_from_params
+    render :show if @sub
   end
 
   def index
@@ -37,6 +38,13 @@ class SubsController < ApplicationController
   end
 
   def destroy
+    if @sub.destroy
+      flash[:notices] = ["Sub Successfully Deleted"]
+      redirect_to subs_url
+    else
+      flash.now[:errors] = @sub.errors.full_messages
+      render :show
+    end
   end
 
   private
@@ -46,6 +54,7 @@ class SubsController < ApplicationController
 
   def get_sub_from_params
     @sub = Sub.find_by_id(params[:id])
+    render_not_found unless @sub
   end
 
   def ensure_user_is_mod
