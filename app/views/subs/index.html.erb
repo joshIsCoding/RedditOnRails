@@ -1,5 +1,7 @@
 <h1>Subs#index</h1>
 
+<%= render "shared/notices", notices: flash[:notices], type: :notice %>
+
 <% @subs.each do |sub| %>
 <article>
 <header><h5><%= link_to sub.title, sub_url(sub) %></h5></header>
