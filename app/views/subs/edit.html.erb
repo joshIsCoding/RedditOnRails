@@ -3,3 +3,5 @@
 <%= render "shared/notices", notices: flash[:errors], type: :error %>
 <% end %>
 <%= render "sub_form" %>
+
+<%= button_to "DELETE", sub_url(@sub), method: :delete %>
