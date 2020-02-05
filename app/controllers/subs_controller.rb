@@ -1,5 +1,6 @@
 class SubsController < ApplicationController
-  skip_before_action :require_login, only: [:index, :show]
+  skip_before_action :require_login, only: [:index, :show, :update]
+  before_action :ensure_user_is_mod, only: [:edit, :update, :destroy]
   def new
     @sub = Sub.new
   end
@@ -19,10 +20,16 @@ class SubsController < ApplicationController
   end
 
   def update
+    if @sub.update(sub_params)
+      redirect_to sub_url(@sub)
+    else
+      flash.now[:errors] = @sub.errors.full_messages
+      render :edit
+    end
   end
 
   def show
-    @sub = Sub.find_by_id(params[:id])
+    get_sub_from_params
   end
 
   def index
@@ -35,5 +42,16 @@ class SubsController < ApplicationController
   private
   def sub_params
     params.require(:sub).permit(:name, :title, :description)
+  end
+
+  def get_sub_from_params
+    @sub = Sub.find_by_id(params[:id])
+  end
+
+  def ensure_user_is_mod
+    get_sub_from_params
+    unless current_user == @sub.moderator
+      redirect_back(fallback_location: sub_url(@sub))
+    end
   end
 end
