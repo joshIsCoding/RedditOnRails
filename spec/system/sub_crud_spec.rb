@@ -125,7 +125,7 @@ RSpec.describe "User Authentication", type: :system do
     end
   end
 
-  describe "Sub Updates" do
+  describe "Sub Updates and Deletion" do
     let!(:update_sub) do
       Sub.create!(
         name: "UpdateSub",
@@ -149,15 +149,25 @@ RSpec.describe "User Authentication", type: :system do
     end
 
     context "when the user is the sub moderator" do
-      it "allows the mod to update their sub from the sub page" do
+      before(:each) do
         login(other_user)
         visit(sub_path(update_sub))
         click_link("EDIT")
+      end
+
+      it "allows the mod to update their sub from the sub page" do
         new_description = "Only other_user can update this sub."
         fill_in "sub_description", with: new_description
         click_button("SAVE")
         expect(page).to have_content(new_description)
         expect(page).to have_current_path(sub_path(update_sub))
+      end
+
+      it "allows the mod to delete the sub altogether" do
+        click_button("DELETE")
+        expect(page).to have_current_path(subs_path)
+        expect(page).not_to have_content(update_sub.name)
+        expect(page).to have_content("Sub Successfully Deleted")
       end
     end
   end
