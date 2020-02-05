@@ -1,2 +1,6 @@
-<h1>Subs#new</h1>
-<p>Find me in app/views/subs/new.html.erb</p>
+<h1>Create Community</h1>
+<p>Create your own sub.</p>
+<% if flash[:errors] %>
+<%= render "shared/notices", notices: flash[:errors], type: :error %>
+<% end %>
+<%= render "sub_form" %>
