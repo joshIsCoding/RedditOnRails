@@ -20,23 +20,50 @@ RSpec.describe "User Authentication", type: :system do
         moderator: main_user
         )
       end
+
+    let!(:sub_posts) do
+      posts = (1..3).to_a
+      posts.map do |i|
+        Post.create!(
+          title: "post_#{i}",
+          sub: show_sub,
+          author: i.even? ? main_user : other_user
+        )
+      end
+    end
+    
     context "when not logged in" do
+      before(:each) { visit(sub_path(show_sub)) }
+      
       it "shows the sub's title and description" do
-        visit(sub_path(show_sub))
         expect(page).to have_content(show_sub.title)
         expect(page).to have_content(show_sub.description)
+      end
+
+      it "shows an index of posts within the sub" do
+        sub_posts.each do |post|
+          expect(page).to have_content(post.title)
+        end
       end
     end
 
     context "when logged in" do
-      it "still shows the sub's title and description" do
+      before(:each) do
         login(main_user)
         visit(sub_path(show_sub))
+      end
+
+      it "still shows the sub's title and description" do
         expect(page).to have_content(show_sub.title)
         expect(page).to have_content(show_sub.description)
       end
-    end
 
+      it "shows an index of posts within the sub" do
+        sub_posts.each do |post|
+          expect(page).to have_content(post.title)
+        end
+      end
+    end
   end
 
   describe "Sub#index" do
