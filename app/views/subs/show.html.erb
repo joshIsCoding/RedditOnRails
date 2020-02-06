@@ -4,3 +4,6 @@
   <%= link_to("EDIT", edit_sub_url(@sub)) if @sub.moderator == current_user %>
 </header>
 <p><%= @sub.description %></p>
+<section class="posts">
+  <%= render "posts/index", posts: @sub.posts %>
+</section>
