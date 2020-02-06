@@ -1,0 +1,11 @@
+<% posts.each do |post| %>
+<article>
+  <header>
+    <p>Posted by u/<%= post.author.username %> <%= 
+    time_ago_in_words(post.created_at) %> ago</p>
+    <h4><%= post.title %></h4>
+  </header>
+  <p><%= post.content %></p>
+  <footer># Comments Give Award Share</footer>
+</article>
+<% end %>
