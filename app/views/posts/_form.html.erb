@@ -1,0 +1,16 @@
+<form action="<%= @post.persisted? ? post_url : posts_url %>" method="post">
+  <% if @post.persisted? %>
+  <input type="hidden" name="_method" value="patch">
+  <% end %>
+  <%= csrf_token %>
+  <select name="post[sub_id]" id="post_sub_id">
+    <% Sub.all.each do |sub| %>
+    <option value="<%= sub.id %>" <%= "checked" if @post.sub == sub %>
+    ><%= sub.name %></option>
+    <% end %>
+  </select>
+  <input id="post_title" type="text" name="post[title]" placeholder="Title">
+  <textarea name="post[content]" id="post_content" cols="30" rows="10" 
+    placeholder="Text (optional)"></textarea>
+  <input type="submit" value="POST">
+</form>
