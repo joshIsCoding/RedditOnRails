@@ -3,7 +3,11 @@
   <p><%= @sub.name %></p>
   <%= link_to("EDIT", edit_sub_url(@sub)) if @sub.moderator == current_user %>
 </header>
+<aside>
+<h2>About Community</h2>
 <p><%= @sub.description %></p>
+<%= link_to "CREATE POST", new_sub_post_url(@sub) %>
+</aside>
 <section class="posts">
   <%= render "posts/index", posts: @sub.posts %>
 </section>
