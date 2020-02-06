@@ -6,7 +6,7 @@
 <aside>
 <h2>About Community</h2>
 <p><%= @sub.description %></p>
-<%= link_to "CREATE POST", new_sub_post_url(@sub) %>
+<%= link_to "CREATE POST", new_sub_post_url(@sub) if logged_in? %>
 </aside>
 <section class="posts">
   <%= render "posts/index", posts: @sub.posts %>
