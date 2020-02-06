@@ -7,7 +7,7 @@ RSpec.configure do |c|
   c.include FormHelper
 end
 
-RSpec.describe "User Authentication", type: :system do
+RSpec.describe "Sub CRUD", type: :system do
   let(:main_user) { User.create!(username: "Main_user", password: "test_pass")}
   let(:other_user) { User.create!(username: "Other_user", password: "test_pass")}
 
