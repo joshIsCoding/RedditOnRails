@@ -2,6 +2,7 @@
   <% if @sub.persisted? %>
   <input type="hidden" name="_method" value="patch">
   <% end %>
+  <%= csrf_token %>
   <label for="sub_name">name</label>
   <label for="sub_name">No spaces, e.g., "books" or "bookclub". Once chosen, this name cannot be changed.</label>
   <input id="sub_name" type="text" name="sub[name]" value="<%= @sub.name %>">
