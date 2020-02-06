@@ -1,10 +1,10 @@
 require 'support/auth_helper'
-require 'support/sub_helper'
+require 'support/form_helper'
 require 'rails_helper'
 
 RSpec.configure do |c|
   c.include AuthHelper
-  c.include SubHelper
+  c.include FormHelper
 end
 
 RSpec.describe "User Authentication", type: :system do
@@ -134,7 +134,8 @@ RSpec.describe "User Authentication", type: :system do
       end 
       context "when the provided sub details are valid" do
         it "lets a user create the new sub" do
-          create_sub(valid_sub)
+          fill_in_form(valid_sub)
+          click_button "CREATE"
           valid_sub.each_value do |sub_property|
             expect(page).to have_content(sub_property)
           end
@@ -143,7 +144,8 @@ RSpec.describe "User Authentication", type: :system do
 
       context "when the sub details are invalid" do
         it "refreshes the form with error messages" do
-          create_sub(invalid_sub)
+          fill_in_form(invalid_sub)
+          click_button "CREATE"
           expect(page).to have_content("cannot contain spaces")
           expect(page).to have_content("Description can't be blank")
         end
