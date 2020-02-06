@@ -17,6 +17,14 @@ RSpec.describe "Post CRUD", type: :system do
         moderator: main_user
       )
   end
+  let!(:other_sub) do
+    Sub.create!(
+        name: "Other",
+        title: "Other", 
+        description: "For talking about everything else.",
+        moderator: main_user
+      )
+  end
 
   describe "Post Creation" do
     
@@ -55,7 +63,7 @@ RSpec.describe "Post CRUD", type: :system do
       end
 
       it "lets a user create a post for the sub" do
-        click_link("CREATE POST")
+        click_on("CREATE POST")
         fill_in_form(valid_post)
         click_button("POST")
         valid_post.each_value do |post_property|
@@ -65,6 +73,9 @@ RSpec.describe "Post CRUD", type: :system do
       end
 
       it "refreshes the form with errors if the post details are invalid" do
+        click_on("CREATE POST")
+        fill_in_form(invalid_post)
+        click_button("POST")
         expect(page).to have_content("Title can't be blank")
         expect(page).to have_button("POST")
       end
