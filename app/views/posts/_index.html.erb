@@ -1,5 +1,5 @@
 <% posts.each do |post| %>
-<article>
+<article class="post">
   <header>
     <p>Posted by u/<%= post.author.username %> <%= 
     time_ago_in_words(post.created_at) %> ago</p>
