@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
-  before_action :ensure_user_is_author, only: [:edit, :update, :destroy]
+  before_action :ensure_user_is_author, only: [:edit, :update]
+  before_action :ensure_user_has_authority, only: :destroy
   def show
     get_post_from_params
   end
@@ -33,6 +34,12 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    if @post.destroy
+      flash[:notices] = ["Post successfully deleted."]
+      redirect_to sub_url(@post.sub)
+    else
+      redirect_back(fallback_location: sub_url(@post.sub))
+    end
   end
 
   private
@@ -51,5 +58,13 @@ class PostsController < ApplicationController
       redirect_back(fallback_location: post_url(@post))
     end
   end
+
+  def ensure_user_has_authority
+    get_post_from_params
+    unless current_user == @post.author || current_user == @post.sub.moderator
+      redirect_back(fallback_location: post_url(@post))
+    end
+  end
+
 
 end
