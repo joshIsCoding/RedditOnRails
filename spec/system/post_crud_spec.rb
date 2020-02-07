@@ -9,6 +9,7 @@ end
 
 RSpec.describe "Post CRUD", type: :system do
   let(:main_user) { User.create!(username: "Main User", password: "password") }
+  let(:other_user) { User.create!(username: "Other User", password: "password") }
   let!(:main_sub) do
     Sub.create!(
         name: "Main",
@@ -78,6 +79,83 @@ RSpec.describe "Post CRUD", type: :system do
         click_button("POST")
         expect(page).to have_content("Title can't be blank")
         expect(page).to have_button("POST")
+      end
+    end
+  end
+
+  describe "Post Updates" do
+    let!(:main_post) do 
+      Post.create!(
+        title: "Main Post",
+        content: "User's Post",
+        sub: main_sub,
+        author: main_user
+      )
+    end
+
+    context "when not logged in" do
+      it "doesn't provide an edit button from the sub or post pages" do
+        visit(sub_path(main_sub))
+        expect(find("section.posts")).not_to have_link(
+          "Edit Post", 
+          href: /#{edit_post_path(main_post)}$/
+        )
+
+        visit(post_path(main_post))
+        expect(page).not_to have_link(
+          "Edit Post", 
+          href: /#{edit_post_path(main_post)}$/
+        )
+      end
+
+      it "doesn't permit access to the edit form via the url" do
+        visit(edit_post_path(main_post))
+        expect(page).to have_current_path(login_path)
+      end
+    end
+
+    context "when the user is logged in" do
+      let(:other_post) do
+        Post.create!(title: "other_post", sub: main_sub, author: other_user)
+      end
+
+      before(:each) { login(main_user) }
+      
+      it "provides edit buttons for the user's own posts" do
+        visit(sub_path(main_sub))
+        expect(find("section.posts")).to have_link(
+          "Edit Post", 
+          href: /#{edit_post_path(main_post)}$/
+        )
+
+        visit(post_path(main_post))
+        expect(page).to have_link(
+          "Edit Post", 
+          href: /#{edit_post_path(main_post)}$/
+        )
+      end
+
+      it "doesn't provide an edit button for other users' posts" do
+        other_post.valid?
+        visit(sub_path(main_sub))
+        expect(page).
+        not_to have_link("Edit Post", href: /#{edit_post_path(other_post)}$/)
+      end
+      
+      it "permits editing of the user's own posts" do
+        visit(edit_post_path(main_post))
+        fill_in "post_title", with: "Edited Post"
+        click_button "SAVE"
+        expect(page).to have_content("Edited Post")
+        expect(page).to have_current_path(post_path(main_post))
+      end
+
+      it "doesn't let a user edit other users' posts via the url" do
+        other_post.valid?
+        visit(edit_post_path(other_post))
+        expect(page).to have_current_path(post_path(other_post))
+        expect(page).
+        not_to have_link("Edit Post", href: /#{edit_post_path(other_post)}$/)
       end
     end
   end
