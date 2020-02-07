@@ -9,8 +9,17 @@
     ><%= sub.name %></option>
     <% end %>
   </select>
-  <input id="post_title" type="text" name="post[title]" placeholder="Title">
-  <textarea name="post[content]" id="post_content" cols="30" rows="10" 
-    placeholder="Text (optional)"></textarea>
-  <input type="submit" value="POST">
+  <input 
+    id="post_title" 
+    type="text" 
+    name="post[title]" 
+    placeholder="Title"
+    value="<%= @post.title %>">
+  <textarea 
+    name="post[content]" 
+    id="post_content" 
+    cols="30" rows="10" 
+    placeholder="Text (optional)"
+    ><%= @post.content %></textarea>
+  <input type="submit" value="<%= @post.persisted? ? "SAVE" : "POST" %>">
 </form>
