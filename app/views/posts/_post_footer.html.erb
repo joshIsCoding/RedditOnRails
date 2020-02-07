@@ -1,3 +1,7 @@
+<% user_has_authority = (
+  post.sub.moderator == current_user || post.author == current_user 
+  ) %>
 <footer># Comments Give Award Share <%= 
-link_to "Edit Post", edit_post_url(post) if post.author == current_user %>
+link_to "Edit Post", edit_post_url(post) if post.author == current_user %> <%= 
+button_to "Delete Post", post_url(post), method: :delete if user_has_authority %>
 </footer>
