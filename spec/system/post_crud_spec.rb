@@ -18,14 +18,7 @@ RSpec.describe "Post CRUD", type: :system do
         moderator: main_user
       )
   end
-  let!(:other_sub) do
-    Sub.create!(
-        name: "Other",
-        title: "Other", 
-        description: "For talking about everything else.",
-        moderator: main_user
-      )
-  end
+  
 
   describe "Post Creation" do
     
@@ -83,15 +76,20 @@ RSpec.describe "Post CRUD", type: :system do
     end
   end
 
+  let!(:main_post) do 
+    Post.create!(
+      title: "Main Post",
+      content: "User's Post",
+      sub: main_sub,
+      author: main_user
+    )
+  end
+
+  let(:other_post) do
+    Post.create!(title: "other_post", sub: main_sub, author: other_user)
+  end
+
   describe "Post Updates" do
-    let!(:main_post) do 
-      Post.create!(
-        title: "Main Post",
-        content: "User's Post",
-        sub: main_sub,
-        author: main_user
-      )
-    end
 
     context "when not logged in" do
       it "doesn't provide an edit button from the sub or post pages" do
@@ -115,9 +113,6 @@ RSpec.describe "Post CRUD", type: :system do
     end
 
     context "when the user is logged in" do
-      let(:other_post) do
-        Post.create!(title: "other_post", sub: main_sub, author: other_user)
-      end
 
       before(:each) { login(main_user) }
       
@@ -156,6 +151,58 @@ RSpec.describe "Post CRUD", type: :system do
         expect(page).to have_current_path(post_path(other_post))
         expect(page).
         not_to have_link("Edit Post", href: /#{edit_post_path(other_post)}$/)
+      end
+    end
+  end
+
+  describe "Post Deletion" do
+    context "when not logged in" do
+      it "doesn't allow the user to delete posts from the sub or post pages" do
+        visit(sub_path(main_sub))
+        expect(find("section.posts")).not_to have_button("Delete Post")
+
+        visit(post_path(main_post))
+        expect(page).not_to have_button("Delete Post")
+      end
+    end
+
+    context "when logged in" do
+      
+      before(:each) { login(main_user)}
+      it "allows the user to delete all posts for subs in which they are the mod" do
+        other_post.valid?
+        visit(sub_path(main_sub))
+        expect(page).to have_button("Delete Post", count: 2)          
+        click_button("Delete Post", match: :first)
+        expect(page).to have_current_path(sub_path(main_sub))
+        click_button("Delete Post")
+        expect(page).not_to have_content(other_post.title)
+      end
+
+      it "allows the user to delete their own posts in other subs" do
+        other_sub = Sub.create!(
+          name: "Other",
+          title: "Other", 
+          description: "For talking about everything else.",
+          moderator: other_user
+        )
+
+        other_sub_post = Post.create!(
+          title: "Other's Post",
+          sub: other_sub,
+          author: other_user
+        )
+
+        other_sub_main_post = Post.create!(
+          title: "Main's Post",
+          sub: other_sub,
+          author: main_user
+        )
+
+        visit(sub_path(other_sub))
+        expect(page).to have_button("Delete Post", count: 1)
+        click_button("Delete Post")
+        expect(page).not_to have_content(other_sub_main_post.title)
       end
     end
   end
