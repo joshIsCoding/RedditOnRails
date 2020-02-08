@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Post, type: :model do
   describe "Validations" do
     it { is_expected.to validate_presence_of(:title) }
+    it { is_expected.to validate_presence_of(:subs) }
     it do 
       is_expected.to allow_values(
         "google.com", 
@@ -21,7 +22,8 @@ RSpec.describe Post, type: :model do
   end
 
   describe "Associations" do
-    it { is_expected.to belong_to(:sub) }
+    it { is_expected.to have_many(:post_subs) }
+    it { is_expected.to have_many(:subs) }
     it { is_expected.to belong_to(:author) }
   end
 end
