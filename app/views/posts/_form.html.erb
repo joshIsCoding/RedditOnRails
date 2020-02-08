@@ -3,12 +3,23 @@
   <input type="hidden" name="_method" value="patch">
   <% end %>
   <%= csrf_token %>
-  <select name="post[sub_id]" id="post_sub_id">
-    <% Sub.all.each do |sub| %>
-    <option value="<%= sub.id %>" <%= "checked" if @post.sub == sub %>
-    ><%= sub.name %></option>
-    <% end %>
-  </select>
+  <fieldset  class="sub_menu">
+    <ul>
+      <% Sub.all.each do |sub| %>
+      <li>
+        <input 
+          type="checkbox" 
+          id="<%= sub.name %>"
+          name="post[sub_ids][]" 
+          value="<%= sub.id %>" 
+          <%= "checked" if @post.subs.include?(sub) %>
+        >
+        <label for="<%= sub.name %>">r/<%= sub.name %></label>
+      </li>
+      <% end %>
+    </ul>
+    <input type="hidden" name="post[sub_id][]" value="">
+  </fieldset>
   <input 
     id="post_title" 
     type="text" 
