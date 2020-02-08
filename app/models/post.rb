@@ -2,7 +2,7 @@ class Post < ApplicationRecord
   validates :title, presence: true
   validate :url, :url_is_valid
   
-  has_many :post_subs
+  has_many :post_subs, dependent: :destroy
   has_many :subs, through: :post_subs
 
   validates :subs, presence: true
