@@ -1,4 +1,4 @@
-<% posts.each do |post| %>
+<% sub.posts.sort_created_at.each do |post| %>
 <article class="post">
   <header>
     <p>Posted by u/<%= post.author.username %> <%= 
@@ -6,6 +6,6 @@
     <h4><%= post.title %></h4>
   </header>
   <p><%= post.content %></p>
-  <%= render "posts/post_footer", post: post %>
+  <%= render "posts/post_footer", post: post, sub: sub %>
 </article>
 <% end %>
