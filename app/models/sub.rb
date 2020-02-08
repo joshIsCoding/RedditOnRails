@@ -5,8 +5,11 @@ class Sub < ApplicationRecord
   validate :name_has_no_spaces_or_punctuation
   
   has_many :post_subs
-  has_many :posts, through: :post_subs, dependent: :destroy
-  scope :sort_created_at, -> { order "created_at DESC" }
+  has_many :posts, through: :post_subs, dependent: :destroy do
+    def sort_created_at
+       order("posts.created_at DESC")
+    end
+  end
   belongs_to(
     :moderator, 
     class_name: 'User', 
