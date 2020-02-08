@@ -1,13 +1,17 @@
 <section>
   <article>
     <header>
-      <h6><%= @post.sub.name %></h6>
+      <ul> 
+        <% @post.subs.each do |sub| %>
+        <li><h6><%= sub.name %></h6></li>
+        <% end %>
+      </ul>
       <p>Posted by u/<%= @post.author.username %> <%= 
       time_ago_in_words(@post.created_at) %></p>
       <h2><%= @post.title %></h2>
     </header>
     <p><%= @post.content %></p>
-    <%= render "post_footer", post: @post, sub: sub %>
+    <%= render "post_footer", post: @post%>
   </article>
   <section class="comments">
     
