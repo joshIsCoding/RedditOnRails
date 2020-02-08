@@ -26,7 +26,7 @@ RSpec.describe "Sub CRUD", type: :system do
       posts.map do |i|
         Post.create!(
           title: "post_#{i}",
-          sub: show_sub,
+          subs: [show_sub],
           author: i.even? ? main_user : other_user
         )
       end
