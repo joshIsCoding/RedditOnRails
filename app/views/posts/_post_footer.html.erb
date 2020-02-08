@@ -1,5 +1,5 @@
 <% user_has_authority = (
-  post.sub.moderator == current_user || post.author == current_user 
+  sub.moderator == current_user || post.author == current_user 
   ) %>
 <footer># Comments Give Award Share <%= 
 link_to "Edit Post", edit_post_url(post) if post.author == current_user %> <%= 
