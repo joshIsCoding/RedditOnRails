@@ -7,7 +7,7 @@ class PostsController < ApplicationController
 
   def new
     @post = Post.new
-    @post.sub = Sub.find_by_id(params[:id])
+    @post.sub_ids = [params[:sub_id]]
   end
 
   def create
@@ -38,13 +38,13 @@ class PostsController < ApplicationController
       flash[:notices] = ["Post successfully deleted."]
       redirect_to sub_url(@post.sub)
     else
-      redirect_back(fallback_location: sub_url(@post.sub))
+      redirect_back(fallback_location: sub_url(@post.subs.first))
     end
   end
 
   private
   def post_params
-    params.require(:post).permit(:title, :content, :sub_id)
+    params.require(:post).permit(:title, :content, sub_ids:[])
   end
 
   def get_post_from_params
