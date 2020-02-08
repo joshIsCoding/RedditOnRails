@@ -4,7 +4,9 @@ class Sub < ApplicationRecord
   validates :description, presence: true
   validate :name_has_no_spaces_or_punctuation
   
-  has_many :posts, -> { order "created_at DESC" }
+  has_many :post_subs
+  has_many :posts, through: :post_subs
+  scope :sort_created_at, -> { order "created_at DESC" }
   belongs_to(
     :moderator, 
     class_name: 'User', 
