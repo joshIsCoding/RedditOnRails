@@ -16,7 +16,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "Associations" do
-    it { is_expected.to have_many(:subs) }
+    it { is_expected.to have_many(:subs).dependent(:destroy) }
+    it { is_expected.to have_many(:posts).dependent(:destroy) }
   end
 
   describe "Methods" do
