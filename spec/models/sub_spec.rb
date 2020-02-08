@@ -29,7 +29,7 @@ RSpec.describe Sub, type: :model do
   describe "Associations" do
     it { is_expected.to belong_to(:moderator).with_foreign_key('user_id') }
     it { is_expected.to have_many(:post_subs) }
-    it { is_expected.to have_many(:posts) }
+    it { is_expected.to have_many(:posts).dependent(:destroy) }
   end
 
 end
