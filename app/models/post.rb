@@ -1,7 +1,11 @@
 class Post < ApplicationRecord
   validates :title, presence: true
   validate :url, :url_is_valid
-  belongs_to :sub
+  
+  has_many :post_subs
+  has_many :subs, through: :post_subs
+
+  validates :subs, presence: true
   belongs_to :author, class_name: "User"
 
   private
