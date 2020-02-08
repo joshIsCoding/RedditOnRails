@@ -45,7 +45,7 @@ RSpec.describe "Post CRUD", type: :system do
         { "post_title" => "", "post_content" => "Great!"}
       end
       
-      before(:each) do
+      before(:each) do 
         login(main_user)
         visit(sub_path(main_sub))
       end
@@ -66,6 +66,23 @@ RSpec.describe "Post CRUD", type: :system do
         expect(page).to have_current_path( /#{posts_path}\/\d+/)
       end
 
+      it "allows a user to select multiple subs when creating posts" do
+        other_sub = Sub.create!(
+          name: "Other",
+          title: "Other", 
+          description: "For talking about everything else.",
+          moderator: other_user
+        )
+        click_on("CREATE POST")
+        fill_in_form(valid_post)
+        check("Other")
+        click_button("POST")
+        visit(sub_path(other_sub))
+        expect(page).to have_content(valid_post["post_title"])
+        visit(sub_path(main_sub))
+        expect(page).to have_content(valid_post["post_title"])
+      end
+
       it "refreshes the form with errors if the post details are invalid" do
         click_on("CREATE POST")
         fill_in_form(invalid_post)
@@ -80,13 +97,13 @@ RSpec.describe "Post CRUD", type: :system do
     Post.create!(
       title: "Main Post",
       content: "User's Post",
-      sub: main_sub,
+      subs: [main_sub],
       author: main_user
     )
   end
 
   let(:other_post) do
-    Post.create!(title: "other_post", sub: main_sub, author: other_user)
+    Post.create!(title: "other_post", subs: [main_sub], author: other_user)
   end
 
   describe "Post Updates" do
@@ -189,13 +206,13 @@ RSpec.describe "Post CRUD", type: :system do
 
         other_sub_post = Post.create!(
           title: "Other's Post",
-          sub: other_sub,
+          subs: [other_sub],
           author: other_user
         )
 
         other_sub_main_post = Post.create!(
           title: "Main's Post",
-          sub: other_sub,
+          subs: [other_sub],
           author: main_user
         )
 
