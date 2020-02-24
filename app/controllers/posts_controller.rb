@@ -34,12 +34,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    if @post.destroy
-      flash[:notices] = ["Post successfully deleted for all subs."]
-      redirect_to subs_url
-    else
-      redirect_back(fallback_location: post_url(@post))
-    end
+    destroy_post(@post)
   end
 
   private
@@ -61,7 +56,9 @@ class PostsController < ApplicationController
 
   def ensure_user_has_authority
     get_post_from_params
-    unless current_user == @post.author || current_user == @post.sub.moderator
+    unless current_user == @post.author || (
+      @post.subs.count == 1 && current_user == @post.subs.first.moderator
+    )
       redirect_back(fallback_location: post_url(@post))
     end
   end
