@@ -11,7 +11,7 @@
       <h2><%= @post.title %></h2>
     </header>
     <p><%= @post.content %></p>
-    <%= render "post_footer", post: @post%>
+    <%= render "post_footer", post: @post, sub: nil %>
   </article>
   <section class="comments">
     
