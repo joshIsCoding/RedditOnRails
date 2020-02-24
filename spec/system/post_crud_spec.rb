@@ -184,6 +184,14 @@ RSpec.describe "Post CRUD", type: :system do
     end
 
     context "when logged in" do
+      let!(:other_sub) do 
+        Sub.create!(
+          name: "Other",
+          title: "Other", 
+          description: "For talking about everything else.",
+          moderator: other_user
+        )
+      end
       
       before(:each) { login(main_user)}
       it "allows the user to delete all posts for subs in which they are the mod" do
@@ -197,13 +205,6 @@ RSpec.describe "Post CRUD", type: :system do
       end
 
       it "allows the user to delete their own posts in other subs" do
-        other_sub = Sub.create!(
-          name: "Other",
-          title: "Other", 
-          description: "For talking about everything else.",
-          moderator: other_user
-        )
-
         other_sub_post = Post.create!(
           title: "Other's Post",
           subs: [other_sub],
@@ -220,6 +221,35 @@ RSpec.describe "Post CRUD", type: :system do
         expect(page).to have_button("Delete Post", count: 1)
         click_button("Delete Post")
         expect(page).not_to have_content(other_sub_main_post.title)
+      end
+
+      context "when a post is listed under multiple subs" do
+        let!(:multi_sub_post) do 
+          Post.create!(
+            title: "Main's Multi-sub Post",
+            subs: [main_sub, other_sub],
+            author: main_user
+          )
+        end
+
+        it "doesn't delete the whole post if deleted at the sub level" do
+          visit(sub_path(main_sub))
+          click_button("Delete Post", match: :first)
+          expect(page).to have_current_path(sub_path(main_sub))
+          expect(page).to have_content("Post deleted from this sub.")
+          expect(page).not_to have_content(multi_sub_post.title)
+          visit(sub_path(other_sub))
+          expect(page).to have_content(multi_sub_post.title)
+        end
+
+        it "deletes the post in all contexts if deleted at the post level" do
+          visit(post_path(multi_sub_post))
+          click_button("Delete Post")
+          [main_sub, other_sub].each do |sub|
+            visit(sub_path(sub))
+            expect(page).not_to have_content(multi_sub_post.title)
+          end
+        end
       end
     end
   end
