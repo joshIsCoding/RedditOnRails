@@ -3,6 +3,9 @@
   <p><%= @sub.name %></p>
   <%= link_to("EDIT", edit_sub_url(@sub)) if @sub.moderator == current_user %>
 </header>
+<% if flash[:notices] %>
+<%= render "shared/notices", notices: flash[:notices], type: :notice %>
+<% end %>
 <aside>
 <h2>About Community</h2>
 <p><%= @sub.description %></p>
