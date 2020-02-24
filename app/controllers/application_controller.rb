@@ -33,6 +33,16 @@ class ApplicationController < ActionController::Base
     redirect_to :root if logged_in?
   end
 
+  def destroy_post(post)
+    sub = post.subs.first
+    if post.destroy
+      flash[:notices] = ["Post successfully deleted for all subs."]
+      redirect_to sub_url(sub)
+    else
+      redirect_back(fallback_location: post_url(post))
+    end
+  end
+
   def render_not_found
       raise ActionController::RoutingError.new('Page not found')
    end
