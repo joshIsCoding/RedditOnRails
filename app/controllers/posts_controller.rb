@@ -35,10 +35,10 @@ class PostsController < ApplicationController
 
   def destroy
     if @post.destroy
-      flash[:notices] = ["Post successfully deleted."]
-      redirect_to sub_url(@post.sub)
+      flash[:notices] = ["Post successfully deleted for all subs."]
+      redirect_to subs_url
     else
-      redirect_back(fallback_location: sub_url(@post.subs.first))
+      redirect_back(fallback_location: post_url(@post)
     end
   end
 
