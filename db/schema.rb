@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_08_003941) do
+ActiveRecord::Schema.define(version: 2020_02_24_212808) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "post_subs", id: false, force: :cascade do |t|
+  create_table "post_subs", force: :cascade do |t|
     t.bigint "post_id", null: false
     t.bigint "sub_id", null: false
     t.index ["post_id", "sub_id"], name: "index_post_subs_on_post_id_and_sub_id"
