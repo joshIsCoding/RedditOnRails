@@ -3,15 +3,13 @@ require 'rails_helper'
 RSpec.describe PostSub, type: :model do
   describe "Validations" do
     it do
-      post_sub = PostSub.create!(
-        sub: Sub.create!(
+      sub = Sub.create!(
           name: "test",
           title: "test",
           description: "k",
           moderator: User.create!(username: "Test", password: "password")
-        ),
-        post: Post.create!( title: "test", sub: Sub.first, author: User.first )
-      )
+        )
+      post = Post.create!( title: "test", subs: [sub], author: User.first )
 
       is_expected.to validate_uniqueness_of(:sub_id).scoped_to(:post_id)
     end  
