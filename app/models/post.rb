@@ -8,6 +8,11 @@ class Post < ApplicationRecord
   validates :subs, presence: true
   belongs_to :author, class_name: "User"
 
+
+  def get_post_sub(sub)
+    self.post_subs.find_by(sub: sub)
+  end
+  
   private
   def url_is_valid
     if self.url
