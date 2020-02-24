@@ -38,7 +38,7 @@ class PostsController < ApplicationController
       flash[:notices] = ["Post successfully deleted for all subs."]
       redirect_to subs_url
     else
-      redirect_back(fallback_location: post_url(@post)
+      redirect_back(fallback_location: post_url(@post))
     end
   end
 
