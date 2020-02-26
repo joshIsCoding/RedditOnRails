@@ -1,0 +1,17 @@
+<section class="comments">
+  <% @post.comments.with_authors.each do |comment|  %>
+  <article class="comment">
+    <header class="comment-header">
+      <h6 class="author"><%= comment.author_name %></h6>
+      <data class="votes" value="0"># votes</data>
+      <time 
+        datetime="<%= comment.created_at.strftime("%Y-%m-%dT%H:%M") %>"
+        title="<%= comment.created_at.strftime("%Y-%m-%d at %I:%M %p") %>">
+        <%= time_ago_in_words(comment.created_at) %>
+      </time>
+    </header>
+    <p class="comment-contents"><%= comment.contents %></p>
+  </article>
+  <% end %>
+
+</section>
