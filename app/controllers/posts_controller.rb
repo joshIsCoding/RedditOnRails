@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
   before_action :ensure_user_is_author, only: [:edit, :update]
   before_action :ensure_user_has_authority, only: :destroy
+  skip_before_action :require_login, only: :show
   def show
     get_post_from_params
   end
