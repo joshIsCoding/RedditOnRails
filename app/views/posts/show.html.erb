@@ -1,9 +1,9 @@
-<section>
+<section class="full-post">
   <article>
     <header>
-      <ul> 
+      <ul class="posted-subs"> 
         <% @post.subs.each do |sub| %>
-        <li><h6><%= sub.name %></h6></li>
+        <li><h6><%= link_to sub.name, sub %></h6></li>
         <% end %>
       </ul>
       <p>Posted by u/<%= @post.author.username %> <%= 
@@ -13,8 +13,8 @@
     <p><%= @post.content %></p>
     <%= render "post_footer", post: @post, sub: nil %>
   </article>
-  <section class="comments">
-    
-  </section>
-  
+  <% if logged_in? %>
+    <%= render "comments/form" %>
+  <% end %>
+  <%= render "comments/index" %>
 </section>
