@@ -10,7 +10,15 @@
   </head>
 
   <body>
-  <header><h6><%= current_user.username if logged_in? %></h6></header>
+  <header>
+    <h2><%= link_to "RedditOnRails", root_url %></h2>
+    <% unless logged_in? %>
+    <%= link_to "LOG IN", login_url, class: "login button" %>
+    <%= link_to "SIGN UP", register_url, class: "register button" %>
+    <% end %>
+    <h6><%= current_user.username if logged_in? %></h6>
+  
+  </header>
     <%= yield %>
   </body>
 </html>
