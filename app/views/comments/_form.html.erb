@@ -1,0 +1,21 @@
+<form 
+  action="<%= comments_url %>" 
+  method="post"
+  class="add-comment"
+  >
+  <%= csrf_token %>
+  <input 
+    type="hidden" 
+    name="comment[post_id]" 
+    value="<%= @post %>">
+    <label for="comment_contents">
+      Comment as <%= current_user.username %>
+    </label>
+  <textarea 
+    name="comment[contents]" 
+    id="comment_contents" 
+    cols="30" 
+    rows="10"
+    placeholder="What are your thoughts?"></textarea>
+  <input type="submit" value="Comment">
+</form>
