@@ -24,6 +24,7 @@ RSpec.describe Post, type: :model do
   describe "Associations" do
     it { is_expected.to have_many(:post_subs).dependent(:destroy) }
     it { is_expected.to have_many(:subs) }
+    it { is_expected.to have_many(:comments).dependent(:destroy) }
     it { is_expected.to belong_to(:author) }
   end
 end
