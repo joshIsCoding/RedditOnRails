@@ -1,8 +1,6 @@
 FactoryBot.define do
-  factory :user do
-    username { "MyString" }
-    password { "MyString" }
-    password_digest { "MyString" }
-    session_token { "MyString" }
+  factory :user, aliases: [:author, :moderator] do
+    sequence(:username) { |n| "user_#{n}" }
+    password { "password" }
   end
 end

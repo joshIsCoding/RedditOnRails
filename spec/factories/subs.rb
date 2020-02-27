@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :sub do
-    title { "MyString" }
+    sequence(:title) { |n| "sub_#{n}" }
     description { "MyText" }
-    user { nil }
+    association :moderator, factory: :user
   end
 end
