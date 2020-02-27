@@ -4,6 +4,7 @@ class Post < ApplicationRecord
   
   has_many :post_subs, dependent: :destroy, inverse_of: :post
   has_many :subs, through: :post_subs
+  has_many :sub_mods, through: :subs, source: :moderator
   
   has_many :comments, dependent: :destroy
   validates :subs, presence: true
