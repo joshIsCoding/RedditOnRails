@@ -60,7 +60,10 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
       it "doesn't permit blank comments" do
         click_on("Comment")
         expect(page).to have_content("Contents can't be blank")
-        expect(find("section.comments")).not_to have_content(main_user.username)
+        expect(find("section.comments")).
+        to have_content(main_user.username, count: 1)
+        # prior comment will be present and was also authored by main_user;
+        # main_user's name should thus appear once only in the comments section.
       end
     end
   end
