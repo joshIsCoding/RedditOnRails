@@ -1,5 +1,6 @@
+<% current_user_mod = current_user_is_mod?(@post) %>
 <section class="comments">
-  <% @post.comments.with_authors.each do |comment|  %>
+  <% @post.comments.with_authors.sort_created.each do |comment|  %>
   <article class="comment">
     <header class="comment-header">
       <h6 class="author"><%= comment.author_name %></h6>
@@ -11,6 +12,9 @@
       </time>
     </header>
     <p class="comment-contents"><%= comment.contents %></p>
+    <% if current_user_mod || current_user == comment.author %>
+    <footer><%= button_to "Delete Comment", comment, method: :delete %></footer>
+    <% end %>
   </article>
   <% end %>
 
