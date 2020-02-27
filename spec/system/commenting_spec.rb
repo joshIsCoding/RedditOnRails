@@ -23,16 +23,17 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
       author: main_user
     )
   end
+  let!(:prior_comment) do 
+    Comment.create!(
+      contents: "previous comment",
+      post: main_post,
+      author: main_user        
+    )
+  end
 
   describe "Creating Comments" do
     context "when user isn't logged in" do
-      let!(:prior_comment) do 
-        Comment.create!(
-          contents: "previous comment",
-          post: main_post,
-          author: main_user        
-        )
-      end
+      
       before(:each) { visit(post_path(main_post)) }
       it "shows prior comments" do
         expect(page).to have_content(prior_comment.contents)        
@@ -58,7 +59,7 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
 
       it "doesn't permit blank comments" do
         click_on("Comment")
-        expect(page).to have_content("Contents cannot be blank")
+        expect(page).to have_content("Contents can't be blank")
         expect(find("section.comments")).not_to have_content(main_user.username)
       end
     end
@@ -66,14 +67,61 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
 
   describe "Comment Deletion" do
     context "when not logged in" do
-      it "doesn't allow a user to delete any comments"
+      it "doesn't allow a user to delete any comments" do
+        visit(post_path(main_post))
+        expect(page).not_to have_button("Delete Comment")
+      end
     end
 
     context "when logged in" do
-      it "allows a user to delete their own comments"
-      it "does not allow a user to delete other user's comments"
+      before(:each) do
+        login(main_user)
+      end
+      it "allows a user to delete their own comments" do
+        visit(post_path(main_post))
+        find("article.comment footer").click_on("Delete Comment")
+        expect(page).to have_current_path(post_path(main_post))
+        expect(page).not_to have_content(prior_comment.contents)        
+      end
 
-      it "allows moderators of a sub to delete comments on posts linked to their sub"
+      let!(:other_user) { User.create!(username: "other_user", password: "password")}
+      
+      it "does not allow a user to delete other user's comments" do
+        other_sub = Sub.create!(
+          moderator: other_user,
+          name: "Other",
+          title: "Other", 
+          description: "For talking about other things.",
+        )
+        other_post = Post.create!(
+          title: "Other post",
+          content: "Other sub post",
+          subs: [other_sub],
+          author: main_user
+        )
+        other_post_comment = Comment.create!(
+          post: other_post,
+          author: other_user,
+          contents: "main user cannot delete me"
+        )
+        visit(post_path(other_post))
+        expect(page).to have_content(other_post_comment.contents)
+        expect(page).not_to have_button("Delete Comment")
+      end
+
+      it "allows moderators of a sub to delete comments on posts linked to their sub" do
+        other_user_comment = Comment.create!(
+          post: main_post,
+          author: other_user,
+          contents: "Sub moderator can delete me"
+        )
+
+        visit(post_path(main_post))
+        expect(page).to have_content(other_user_comment.contents)
+        find("article.comment footer", match: :first).click_on("Delete Comment")
+        expect(page).to have_current_path(post_path(main_post))
+        expect(page).not_to have_content(other_user_comment.contents)
+      end
     end
 
   end
