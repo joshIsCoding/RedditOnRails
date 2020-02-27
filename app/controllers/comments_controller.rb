@@ -12,5 +12,8 @@ class CommentsController < ApplicationController
   end
 
   def destroy
+    @comment = Comment.find_by_id(params[:id])
+    flash[:errors] = @comment.errors.full_messages unless @comment.destroy
+    redirect_back(fallback_location: @comment.post)
   end
 end
