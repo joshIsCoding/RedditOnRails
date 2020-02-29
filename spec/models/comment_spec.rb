@@ -6,7 +6,7 @@ RSpec.describe Comment, type: :model do
   end
 
   describe "Associations" do
-    it { is_expected.to belong_to(:post).dependent(:destroy) }
-    it { is_expected.to belong_to(:author).dependent(:destroy) }
+    it { is_expected.to belong_to(:post) }
+    it { is_expected.to belong_to(:author) }
   end
 end
