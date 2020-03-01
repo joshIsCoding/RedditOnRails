@@ -10,5 +10,6 @@ class Comment < ApplicationRecord
     select("comments.*, users.username AS \"author_name\"")
     .joins(:author)
   end
+  scope :top_level, -> { where(parent_comment_id: nil) }
   scope :sort_created, -> { order(created_at: :desc) }
 end
