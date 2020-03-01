@@ -7,6 +7,8 @@ end
 
 RSpec.describe "Creating and Deleting Comments", type: :system do
   let(:main_user) { User.create!(username: "main_user", password: "password") }
+  let(:other_user) { User.create!(username: "other_user", password: "password")}
+
   let!(:main_sub) do
     Sub.create!(
         name: "Main",
@@ -87,7 +89,7 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
         expect(page).not_to have_content(prior_comment.contents)        
       end
 
-      let!(:other_user) { User.create!(username: "other_user", password: "password")}
+      
       
       it "does not allow a user to delete other user's comments" do
         other_sub = Sub.create!(
@@ -127,5 +129,50 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
       end
     end
 
+  end
+
+  describe "Nested Comments" do
+    describe "Nest Comment Display" do
+      let!(:level_1_nested_comments) do
+        [Comment.create!(
+            contents: "first nested comment",
+            parent_comment: prior_comment,
+            post: main_post,
+            author: other_user        
+          ),
+          Comment.create!(
+            contents: "second nested comment",
+            parent_comment: prior_comment,
+            post: main_post,
+            author: main_user        
+          )
+        ]
+      end
+        
+      it "shows 1st level nested comments in the right place" do
+        visit(post_path(main_post))
+        level_1_nested_comments.each do |nested_comment|
+          expect(page).to have_content(nested_comment.contents, count: 1)
+        end
+        expect(page).to have_selector("section.comments ul.level-1 > li", count: 2)
+        # nest comments should not be rendered in top-level list through general
+        # :comments association
+        expect(page).to have_selector("section.comments ul.top-level > li", count: 1)
+      end
+      let!(:level_2_nested_comment) do
+        Comment.create!(
+          contents: "level-2 nested comment",
+          parent_comment: level_1_nested_comments.last,
+          post: main_post,
+          author: other_user        
+        )
+      end
+      it "shows 2nd level nested comments" do   
+        visit(post_path(main_post))
+        expect(page).to have_content(level_2_nested_comment.contents, count: 1)
+        expect(page).
+        to have_selector("section.comments ul.level-1 ul.level-2 li", count: 1)
+      end
+    end
   end
 end
