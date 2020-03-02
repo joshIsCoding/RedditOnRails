@@ -1,6 +1,8 @@
 <article class="comment">
   <header class="comment-header">
-    <h6 class="author"><%= comment.author_name %></h6>
+    <h6 class="author">
+      <%= index_comment ? comment.author_name : comment.author.username %>
+    </h6>
     <data class="votes" value="0"># votes</data>
     <time 
       datetime="<%= comment.created_at.strftime("%Y-%m-%dT%H:%M") %>"
@@ -9,16 +11,23 @@
     </time>
   </header>
   <p class="comment-contents"><%= comment.contents %></p>
-  <% if current_user_mod || current_user == comment.author %>
-  <footer><%= button_to "Delete Comment", comment, method: :delete %></footer>
-  <% end %>
+  
+  <footer>
+    <% if index_comment && logged_in? %>
+    <%= link_to "Reply", comment %>
+    <% end %>
+    <% if current_user_mod || current_user == comment.author %>
+    <%= button_to "Delete Comment", comment, method: :delete %>
+    <% end %>
+  </footer>
 </article>
-<% if comment.child_comments.any? %>
+<% if index_comment && comment.child_comments.any? %>
 <ul class="<%= "level-#{level}" %>">
   <% comment.child_comments.with_authors.sort_created.each do |child_comment| %>
   <li>
     <%= render "comments/comment", 
         comment: child_comment, 
+        index_comment: true,
         current_user_mod: current_user_mod,
         level: level + 1 %>
   </li>
