@@ -132,7 +132,7 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
   end
 
   describe "Nested Comments" do
-    describe "Nest Comment Display" do
+    describe "Nested Comment Display" do
       let!(:level_1_nested_comments) do
         [Comment.create!(
             contents: "first nested comment",
@@ -173,6 +173,27 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
         expect(page).
         to have_selector("section.comments ul.level-1 ul.level-2 li", count: 1)
       end
+    end
+
+    describe "Nested Comment Creation" do
+      before(:each) do
+        login(main_user)
+        visit(post_path(main_post))
+      end
+      it "allows a user to click reply under each comment" do
+        expect(find("section.comments ul.top-level article.comment")).
+        to have_link("Reply", href: /#{comment_path(prior_comment)}$/)
+      end
+
+      it "takes the user to a seperate comment form upon clicking reply" do
+        find("section.comments ul.top-level article.comment").click_on("Reply")
+        expect(page).to have_field("comment_contents")
+        expect(page).to have_current_path(comment_path(prior_comment))
+      end
+
+      it "shows the nested comment after successful submission of the form"
+
+      it "shows validation errors above the form if the comment is invalid"
     end
   end
 end
