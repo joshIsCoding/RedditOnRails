@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   end
   resources :posts, except: [:index, :new]
   resources :post_subs, only: [:destroy]
-  resources :comments, only: [:create, :destroy]
+  resources :comments, only: [:show, :create, :destroy]
   get "register", to: "users#new"
   get "login", to: "sessions#new"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
