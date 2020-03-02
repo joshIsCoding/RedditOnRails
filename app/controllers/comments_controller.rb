@@ -1,5 +1,9 @@
 class CommentsController < ApplicationController
   before_action :find_and_authenticate_comment, only: :destroy
+  def show
+    @comment = Comment.find_by_id(params[:id])
+    redirect_back(fallback_location: root_url) and return unless @comment
+  end
   def create
     @comment = Comment.new(params.require(:comment).permit(:contents, :post_id))
     @comment.author = current_user
