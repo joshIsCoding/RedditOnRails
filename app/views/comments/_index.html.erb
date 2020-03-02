@@ -1,11 +1,11 @@
-<% current_user_mod = current_user_is_mod?(@post) %>
 <section class="comments">
   <% @post.comments.top_level.with_authors.sort_created.each do |comment|  %>
   <ul class="top-level">
     <li>
     <%= render "comments/comment", 
         comment: comment, 
-        current_user_mod: current_user_mod,
+        index_comment: true,
+        current_user_mod: current_user_is_mod?(@post),
         level: 1 %>
     </li>
   </ul>
