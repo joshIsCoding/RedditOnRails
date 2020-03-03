@@ -8,9 +8,15 @@
     type="hidden" 
     name="comment[post_id]" 
     value="<%= post.id %>">
+  <% if parent %>
+  <input 
+    type="hidden" 
+    name="comment[parent_comment_id]" 
+    value="<%= parent.id %>">
     <label for="comment_contents">
       Comment as <%= current_user.username %>
     </label>
+  <% end %>
   <textarea 
     name="comment[contents]" 
     id="comment_contents" 
