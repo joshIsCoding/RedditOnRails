@@ -4,4 +4,4 @@
     index_comment: false,
     current_user_mod: current_user_is_mod?(@comment.post)
 %>
-<%= render "comments/form", post: @comment.post %>
+<%= render "comments/form", post: @comment.post, parent: @comment %>
