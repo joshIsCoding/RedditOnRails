@@ -17,7 +17,7 @@
     <%= render "shared/notices", notices: flash[:errors], type: :error %>
   <% end %>
   <% if logged_in? %>
-    <%= render "comments/form", post: @post %>
+    <%= render "comments/form", post: @post, parent: nil %>
   <% end %>
   <%= render "comments/index" %>
 </section>
