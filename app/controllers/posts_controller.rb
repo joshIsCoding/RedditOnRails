@@ -4,7 +4,7 @@ class PostsController < ApplicationController
   skip_before_action :require_login, only: :show
   def show
     get_post_from_params
-    @comments = @post.comments.with_authors.sort_created
+    @comments = @post.comments_by_parent_id
   end
 
   def new
