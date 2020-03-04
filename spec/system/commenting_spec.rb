@@ -46,6 +46,10 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
         expect(page).not_to have_selector("form.add-comment")
         expect(page).not_to have_button("Comment")
       end
+
+      it "doesn't provide a reply button for prior comments" do
+        expect(page).not_to have_button("Reply")
+      end
     end
 
     context "when user is logged in" do
@@ -180,7 +184,7 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
         login(main_user)
         visit(post_path(main_post))
       end
-      it "allows a user to click reply under each comment" do
+      it "allows a logged in user to click reply under each comment" do
         expect(find("section.comments ul.top-level article.comment")).
         to have_link("Reply", href: /#{comment_path(prior_comment)}$/)
       end
@@ -191,9 +195,22 @@ RSpec.describe "Creating and Deleting Comments", type: :system do
         expect(page).to have_current_path(comment_path(prior_comment))
       end
 
-      it "shows the nested comment after successful submission of the form"
+      it "shows the nested comment after successful submission of the form" do
+        find("section.comments ul.top-level article.comment").click_on("Reply")
+        fill_in("comment_contents", with: "First nested comment")
+        click_on("Comment")
+        expect(page).
+        to have_selector("section.comments ul.top-level ul.level-1 article.comment", count: 1)
+        expect(find("section.comments ul.top-level ul.level-1 article.comment")).
+        to have_content("First nested comment")
+      end
 
-      it "shows validation errors above the form if the comment is invalid"
+      it "shows validation errors above the form if the comment is invalid" do
+        find("section.comments ul.top-level article.comment").click_on("Reply")
+        click_on("Comment")
+        expect(page).to have_current_path(comment_path(prior_comment))
+        expect(page).to have_content("Contents can't be blank")
+      end
     end
   end
 end
