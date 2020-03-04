@@ -4,4 +4,7 @@
     index_comment: false,
     current_user_mod: current_user_is_mod?(@comment.post)
 %>
+<% if flash[:errors] %>
+<%= render "shared/notices", notices: flash[:errors], type: :error %>
+<% end %>
 <%= render "comments/form", post: @comment.post, parent: @comment %>
