@@ -14,6 +14,15 @@ class Post < ApplicationRecord
   def get_post_sub(sub)
     self.post_subs.find_by(sub: sub)
   end
+
+  def comments_by_parent_id
+    all_comments = self.comments.with_authors.sort_created
+    comment_hash = Hash.new { |h,k| h[k] = [] }
+    all_comments.each do |comment|
+      comment_hash[comment.parent_comment_id] << comment
+    end
+    comment_hash
+  end
   
   private
   def url_is_valid
