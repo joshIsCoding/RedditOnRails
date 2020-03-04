@@ -21,17 +21,18 @@
     <% end %>
   </footer>
 </article>
-<% if index_comment && comment.child_comments.any? %>
-<ul class="<%= "level-#{level}" %>">
-  <% comment.child_comments.with_authors.sort_created.each do |child_comment| %>
-  <li>
-    <%= render "comments/comment", 
-        comment: child_comment, 
-        index_comment: true,
-        current_user_mod: current_user_mod,
-        level: level + 1 %>
-  </li>
-<% end %>
-
-</ul>
+<% if index_comment %>
+  <ul class="<%= "level-#{level}" %>">
+  <% @comments.each do |possible_child_comment| %>
+    <% if comment.id == possible_child_comment.parent_comment_id %>
+    <li>
+      <%= render "comments/comment", 
+          comment: possible_child_comment, 
+          index_comment: true,
+          current_user_mod: current_user_mod,
+          level: level + 1 %>
+    </li>
+    <% end %>
+  <% end %>
+  </ul>
 <% end %>
