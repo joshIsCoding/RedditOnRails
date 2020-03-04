@@ -4,8 +4,11 @@ class CommentsController < ApplicationController
     @comment = Comment.find_by_id(params[:id])
     redirect_back(fallback_location: root_url) and return unless @comment
   end
+
   def create
-    @comment = Comment.new(params.require(:comment).permit(:contents, :post_id))
+    @comment = Comment.new(
+      params.require(:comment).permit(:contents, :post_id, :parent_comment_id)
+    )
     @comment.author = current_user
     if @comment.save
       redirect_to @comment.post, anchor: @comment.id
