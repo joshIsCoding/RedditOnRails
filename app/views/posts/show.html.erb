@@ -17,6 +17,7 @@
     <%= render "shared/notices", notices: flash[:errors], type: :error %>
   <% end %>
   <% if logged_in? %>
+    <h6>Comment as <%= current_user.username %></h6>
     <%= render "comments/form", post: @post, parent: nil %>
   <% end %>
   <%= render "comments/index" %>
