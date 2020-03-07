@@ -1,4 +1,5 @@
 class Post < ApplicationRecord
+  include Votable
   validates :title, presence: true
   validate :url, :url_is_valid
   
