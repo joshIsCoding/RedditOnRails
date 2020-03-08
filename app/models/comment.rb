@@ -1,4 +1,5 @@
 class Comment < ApplicationRecord
+  include Votable
   validates :contents, presence: true
   
   belongs_to :author, class_name: "User"
