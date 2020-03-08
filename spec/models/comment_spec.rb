@@ -10,5 +10,6 @@ RSpec.describe Comment, type: :model do
     it { is_expected.to belong_to(:author) }
     it { is_expected.to belong_to(:parent_comment).optional }
     it { is_expected.to have_many(:child_comments) }
+    it { is_expected.to have_many(:votes).dependent(:destroy) }
   end
 end
