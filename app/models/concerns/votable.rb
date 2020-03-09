@@ -6,10 +6,10 @@ module Votable
   included do
     has_many :votes, as: :votable, dependent: :destroy
     scope :sort_by_votes, -> do 
-      select("posts.*, COALESCE(SUM(votes.value), 0) AS vote_sum")
+      select("#{self.table_name}.*, COALESCE(SUM(votes.value), 0) AS vote_sum")
       .left_joins(:votes)
       .order(vote_sum: :desc)
-      .group("posts.id")
+      .group("#{self.table_name}.id")
     end
   end
 end
