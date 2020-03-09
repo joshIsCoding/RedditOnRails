@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   resources :subs do
     resources :posts, only: :new
   end
-  resources :posts, except: [:index, :new]
+  resources :posts, except: [:index, :new] do
+    get "upvote", to: "votes#upvote"
+    get "downvote", to: "votes#downvote"
+  end
   resources :post_subs, only: [:destroy]
   resources :comments, only: [:show, :create, :destroy]
   get "register", to: "users#new"
