@@ -6,13 +6,13 @@ Rails.application.routes.draw do
     resources :posts, only: :new
   end
   resources :posts, except: [:index, :new] do
-    get "upvote", to: "votes#upvote"
-    get "downvote", to: "votes#downvote"
+    post "upvote", to: "votes#upvote"
+    post "downvote", to: "votes#downvote"
   end
   resources :post_subs, only: [:destroy]
   resources :comments, only: [:show, :create, :destroy] do
-    get "upvote", to: "votes#upvote"
-    get "downvote", to: "votes#downvote"
+    post "upvote", to: "votes#upvote"
+    post "downvote", to: "votes#downvote"
   end
   get "register", to: "users#new"
   get "login", to: "sessions#new"
