@@ -1,4 +1,4 @@
-<% @sub.posts.sort_created_at.each do |post| %>
+<% @sub.posts.sort_by_votes.each do |post| %>
 <article class="post">
   <header>
     <p>Posted by u/<%= post.author.username %> <%= 
