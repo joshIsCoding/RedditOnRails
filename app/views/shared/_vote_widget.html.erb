@@ -1,0 +1,10 @@
+<%= link_to "↑", 
+  type == :post ? post_upvote(target) : comment_upvote(target, 
+  method: :post) %>
+<% if type == :post %>
+<data value="<%= target.vote_sum %>">
+  <%= number_with_precision(target.vote_sum, significant: true) %>
+</data>
+<%= link_to "↓", 
+  type == :post ? post_downvote(target) : comment_downvote(target, 
+  method: :post) %>
