@@ -6,6 +6,7 @@
   <data value="<%= target.vote_sum %>">
     <%= number_with_precision(target.vote_sum, significant: true) %>
   </data>
+  <% end %>
   <%= link_to "↓", 
     type == :post ? post_downvote(target) : comment_downvote(target), 
     method: :post) %>
