@@ -1,7 +1,8 @@
 <aside class="votes-widget">
   <%= link_to "↑", 
     type == :post ? post_upvote_url(target) : comment_upvote_url(target), 
-    method: :post %>
+    method: :post, 
+    class: "upvote" %>
   <% if type == :post %>
   <data value="<%= target.vote_sum %>">
     <%= number_with_precision(
@@ -12,5 +13,6 @@
   <% end %>
   <%= link_to "↓", 
     type == :post ? post_downvote_url(target) : comment_downvote_url(target), 
-    method: :post %>
+    method: :post,
+    class: "downvote" %>
 </aside>
