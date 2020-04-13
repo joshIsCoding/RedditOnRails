@@ -1,6 +1,6 @@
 <aside class="votes-widget">
   <%= link_to "↑", 
-    type == :post ? post_upvote_url(target) : comment_upvote_url(target), 
+    type == :post ? upvote_post_url(target) : upvote_comment_url(target), 
     method: :post, 
     class: "upvote" %>
   <% if type == :post %>
@@ -12,7 +12,7 @@
   </data>
   <% end %>
   <%= link_to "↓", 
-    type == :post ? post_downvote_url(target) : comment_downvote_url(target), 
+    type == :post ? downvote_post_url(target) : downvote_comment_url(target), 
     method: :post,
     class: "downvote" %>
 </aside>
