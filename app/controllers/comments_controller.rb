@@ -1,7 +1,8 @@
 class CommentsController < ApplicationController
   before_action :find_and_authenticate_comment, only: :destroy
+  before_action :find_comment, except: [:create, :destroy]
+  
   def show
-    @comment = Comment.find_by_id(params[:id])
     redirect_back(fallback_location: root_url) and return unless @comment
   end
 
@@ -24,9 +25,22 @@ class CommentsController < ApplicationController
     redirect_back(fallback_location: @comment.post)
   end
 
+  def upvote
+    vote(:up, @comment)
+  end
+
+  def downvote
+    vote(:down, @comment)
+  end
+
   private
-  def find_and_authenticate_comment
+
+  def find_comment
     @comment = Comment.find_by_id(params[:id])
+  end
+
+  def find_and_authenticate_comment
+    find_comment
     unless ( @comment.author == current_user || 
       @comment.post.sub_mods.include?(current_user) 
     )
