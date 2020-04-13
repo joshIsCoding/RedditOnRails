@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :require_login
-
   helper_method :current_user, :logged_in?
+
   def current_user
     @current_user ||= User.find_by(session_token: session[:session_token])
   end
@@ -41,6 +41,13 @@ class ApplicationController < ActionController::Base
     else
       redirect_back(fallback_location: post_url(post))
     end
+  end
+
+  def vote(type, resource)
+    unless resource.vote(type, current_user)
+      flash[:errors] = ["Vote not registered."]
+    end
+    redirect_back( fallback_location: resource )
   end
 
   def render_not_found
