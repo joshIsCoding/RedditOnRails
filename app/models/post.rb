@@ -8,7 +8,7 @@ class Post < ApplicationRecord
   has_many :sub_mods, through: :subs, source: :moderator
   
   has_many :comments, dependent: :destroy
-  validates :subs, presence: true
+  validates :subs, presence: true, on: :create
   belongs_to :author, class_name: "User"
 
 
