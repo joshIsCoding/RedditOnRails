@@ -12,4 +12,10 @@ module Votable
       .group("#{self.table_name}.id")
     end
   end
+
+  def vote( type = :up, user )
+    value = ( type == :down || type == "down" ) ? -1 : 1
+    vote = Vote.new(votable: self, voter: user, value: value)
+    vote.save
+  end
 end
