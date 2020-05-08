@@ -54,6 +54,28 @@ RSpec.describe "Voting", type: :system do
         find( "article.post .votes-widget a.downvote", match: :first ).click
         expect( find( "article.post .votes-widget ", match: :first) ).not_to have_selector( "a.downvote")
       end
+
+      it "doesn't let the user vote for their own posts" do
+        user_post = create( :post, author: main_user )
+        visit post_path( user_post )
+        expect( find( 'aside.votes-widget' ) ).to have_content( '0' )
+        expect( find( 'aside.votes-widget' ) ).not_to have_selector( 'a.upvote')
+        expect( find( 'aside.votes-widget ' ) ).not_to have_selector( 'a.downvote')
+      end
+    end
+  end
+
+  describe 'Voting on Comments' do
+    context 'When user is not logged in' do
+      it 'shows the total votes count above each comment'
+      it 'redirects to login page if the user tries to cast a vote'
+    end
+
+    context 'When user is logged in' do
+      it 'shows the total votes count above each comment'
+      it 'allows the user to upvote comments for a maximum of once each'
+      it 'allows the user to downvote comments for a maximum of once each'
+      it 'does not let the user vote for their own comments'
     end
   end
 
