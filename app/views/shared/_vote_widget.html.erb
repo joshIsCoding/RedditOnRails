@@ -1,18 +1,19 @@
 <aside class="votes-widget">
-  <%= link_to "↑", 
-    type == :post ? upvote_post_url(target) : upvote_comment_url(target), 
+  <% hide_vote_buttons = target.author == current_user %>
+  <%= link_to( "↑", 
+    target.is_a?( Post ) ? upvote_post_url(target) : upvote_comment_url(target), 
     method: :post, 
-    class: "upvote" %>
-  <% if type == :post %>
+    class: "upvote" ) unless hide_vote_buttons %>
+  <% if target.is_a?( Post ) %>
   <data value="<%= target.vote_sum %>">
     <%= number_with_precision(
           target.vote_sum, 
           significant: true,
-          strip_insignificant_zeros: true) %>
+          strip_insignificant_zeros: true ) %>
   </data>
   <% end %>
-  <%= link_to "↓", 
-    type == :post ? downvote_post_url(target) : downvote_comment_url(target), 
+  <%= link_to( "↓", 
+    target.is_a?( Post ) ? downvote_post_url(target) : downvote_comment_url(target), 
     method: :post,
-    class: "downvote" %>
+    class: "downvote" ) unless hide_vote_buttons %>
 </aside>
