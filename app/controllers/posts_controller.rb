@@ -5,6 +5,7 @@ class PostsController < ApplicationController
   before_action :ensure_user_has_authority, only: :destroy
   
   def show
+    @post.vote_sum = @post.votes.count
     @comments = @post.comments_by_parent_id
   end
 
