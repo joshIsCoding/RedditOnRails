@@ -6,10 +6,10 @@
         <li><h6><%= link_to sub.name, sub %></h6></li>
         <% end %>
       </ul>
-      <p>Posted by u/<%= @post.author.username %> <%= 
-      time_ago_in_words(@post.created_at) %></p>
+      <p>Posted by u/<%= @post.author.username %> <%= time_ago_in_words(@post.created_at) %></p>
       <h2><%= @post.title %></h2>
     </header>
+    <%= render 'shared/vote_widget', target: @post %>
     <p><%= @post.content %></p>
     <%= render "post_footer", post: @post, sub: nil %>
   </article>
