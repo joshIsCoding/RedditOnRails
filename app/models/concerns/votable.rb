@@ -4,6 +4,7 @@ module Votable
   extend ActiveSupport::Concern
 
   included do
+    attr_accessor :vote_sum
     has_many :votes, as: :votable, dependent: :destroy
     scope :sort_by_votes, -> do 
       select("#{self.table_name}.*, COALESCE(SUM(votes.value), 0) AS vote_sum")
@@ -14,6 +15,7 @@ module Votable
   end
 
   def vote( type = :up, user )
+    return false if self.author == user
     value = ( type == :down || type == "down" ) ? -1 : 1
     vote = Vote.new(votable: self, voter: user, value: value)
     vote.save
