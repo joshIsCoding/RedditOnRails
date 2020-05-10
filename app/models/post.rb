@@ -17,7 +17,9 @@ class Post < ApplicationRecord
   end
 
   def comments_by_parent_id
-    all_comments = self.comments.with_authors.sort_created
+    all_comments = self.comments
+      .with_votes_and_authors
+      .sort_created
     comment_hash = Hash.new { |h,k| h[k] = [] }
     all_comments.each do |comment|
       comment_hash[comment.parent_comment_id] << comment
