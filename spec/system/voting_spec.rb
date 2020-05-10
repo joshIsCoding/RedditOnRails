@@ -66,9 +66,19 @@ RSpec.describe "Voting", type: :system do
   end
 
   describe 'Voting on Comments' do
+    let!( :comments ) { create_list :comment, 3 }
+    let!( :upvotes ) do
+      create_list( :vote, 3, :for_comment, votable: comments.last )
+    end
     context 'When user is not logged in' do
-      it 'shows the total votes count above each comment'
-      it 'redirects to login page if the user tries to cast a vote'
+      before { visit post_path comments.first.post }
+      it 'shows the total votes count above each comment' do
+        expect( find( 'article.comment data.votes', match: :first )).to have_content('3 votes')
+      end
+      it 'redirects to login page if the user tries to cast a vote' do
+        find( 'article.comment aside.votes-widget a.upvote', match: :first ).click
+        expect( page ).to have_current_path( login_path )
+      end
     end
 
     context 'When user is logged in' do
