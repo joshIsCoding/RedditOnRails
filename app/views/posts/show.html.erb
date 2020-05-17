@@ -9,7 +9,7 @@
       <p>Posted by u/<%= @post.author.username %> <%= time_ago_in_words(@post.created_at) %></p>
       <h2><%= @post.title %></h2>
     </header>
-    <%= render 'shared/vote_widget', target: @post %>
+    <%= render 'shared/vote_widget', target: @post, votes: @post.votes.sum( :value ) %>
     <p><%= @post.content %></p>
     <%= render "post_footer", post: @post, sub: nil %>
   </article>
@@ -20,5 +20,7 @@
     <h6>Comment as <%= current_user.username %></h6>
     <%= render "comments/form", post: @post, parent: nil %>
   <% end %>
-  <%= render "comments/index" %>
+  <% if @comments %>
+    <%= render "comments/index" %>
+  <% end %>
 </section>
