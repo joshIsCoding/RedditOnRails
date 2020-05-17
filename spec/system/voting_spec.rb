@@ -16,9 +16,11 @@ RSpec.describe "Voting", type: :system do
 
     context "if the user isn't logged in" do
       before { visit( sub_path( sub )) }
+
       it "shows the vote counts for posts" do
         expect( find("article.post .votes-widget data", match: :first) ).to have_content( upvotes.count )
       end
+
       it "redirects the user to the login page if they try to cast a vote" do
         find( "article.post .votes-widget a.upvote", match: :first ).click
         expect( page ).to have_current_path( login_path )
@@ -28,10 +30,12 @@ RSpec.describe "Voting", type: :system do
       before do
         login( main_user )
         visit( sub_path( sub ))
-      end 
+      end
+
       it "shows the vote counts for posts" do
         expect( find( "article.post .votes-widget data", match: :first )).to have_content( upvotes.count )
       end
+
       it "lets the user upvote posts" do
         find( "article.post .votes-widget a.upvote", match: :first ).click
         expect( find("article.post .votes-widget data", match: :first) ).to have_content( upvotes.count + 1 )
@@ -50,6 +54,7 @@ RSpec.describe "Voting", type: :system do
         find( "article.post .votes-widget a.upvote", match: :first ).click
         expect( find( "article.post .votes-widget", match: :first) ).not_to have_selector( "a.upvote")
       end
+
       it "doesn't allow a user to downvote a post more than once" do
         find( "article.post .votes-widget a.downvote", match: :first ).click
         expect( find( "article.post .votes-widget ", match: :first) ).not_to have_selector( "a.downvote")
@@ -66,15 +71,18 @@ RSpec.describe "Voting", type: :system do
   end
 
   describe 'Voting on Comments' do
-    let!( :comments ) { create_list :comment, 3 }
+    let!( :post ) { create :post }
+    let!( :comments ) { create_list :comment, 3, post: post }
     let!( :upvotes ) do
       create_list( :vote, 3, :for_comment, votable: comments.last )
     end
+
     context 'When user is not logged in' do
-      before { visit post_path comments.first.post }
+      before { visit post_path post }
       it 'shows the total votes count above each comment' do
         expect( find( 'article.comment data.votes', match: :first )).to have_content('3 votes')
       end
+
       it 'redirects to login page if the user tries to cast a vote' do
         find( 'article.comment aside.votes-widget a.upvote', match: :first ).click
         expect( page ).to have_current_path( login_path )
@@ -82,10 +90,36 @@ RSpec.describe "Voting", type: :system do
     end
 
     context 'When user is logged in' do
-      it 'shows the total votes count above each comment'
-      it 'allows the user to upvote comments for a maximum of once each'
-      it 'allows the user to downvote comments for a maximum of once each'
-      it 'does not let the user vote for their own comments'
+      before do 
+        login main_user
+        visit post_path post
+      end
+
+      it 'shows the total votes count above each comment' do
+        expect( find( 'article.comment data.votes', match: :first )).to have_content('3 votes')
+      end
+
+      it 'allows the user to upvote comments for a maximum of once each' do
+        find( 'article.comment aside.votes-widget a.upvote', match: :first ).click
+        expect( find( 'article.comment data.votes', match: :first ) ).to have_content('4 votes')
+        all( 'article.comment aside.votes-widget a.upvote' ).last.click
+        expect( all( 'article.comment data.votes' ).last ).to have_content('1 vote')
+      end
+
+      it 'allows the user to downvote comments for a maximum of once each' do
+        find( 'article.comment aside.votes-widget a.downvote', match: :first ).click
+        expect( find( 'article.comment data.votes', match: :first )).to have_content('2 votes')
+        all( 'article.comment aside.votes-widget a.downvote' )[1].click
+        expect( all( 'article.comment data.votes' )[2] ).to have_content('-1 vote')
+      end
+
+      it 'does not let the user vote for their own comments' do
+        user_comment = create( :comment, author: main_user )
+        visit post_path( user_comment.post )
+        expect( find( 'article.comment data.votes' )).to have_content('0 votes')
+        expect( page ).not_to have_selector( 'article.comment aside.votes-widget a.upvote' )
+        expect( page ).not_to have_selector( 'article.comment aside.votes-widget a.downvote' )
+      end
     end
   end
 
