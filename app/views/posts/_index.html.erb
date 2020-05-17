@@ -1,12 +1,12 @@
-<% @sub.posts.sort_by_votes.each do |post| %>
+<% @sub.posts.with_votes.sort_by_votes.each do |post| %>
 <article class="post">
   <header>
     <p>Posted by u/<%= post.author.username %> <%= 
     time_ago_in_words(post.created_at) %> ago</p>
     <h4><%= link_to post.title, post %></h4>
   </header>
-  <%= render "shared/vote_widget", target: post  %>
+  <%= render "shared/vote_widget", target: post, votes: post.vote_sum  %>
   <p><%= post.content %></p>
-  <%= render "posts/post_footer", post: post, sub: @sub %>
+  <%= render "posts/post_footer", post: post %>
 </article>
 <% end %>
