@@ -30,43 +30,22 @@ RSpec.describe Post, type: :model do
   end
 
   describe "Votes and Related Methods" do
-    let(:users) do
-      u = []
-      3.times {|i| u << User.create!(username: "user_#{i+1}", password: "password")}
-      u
+    let( :sub ) { create :sub }
+    let(:posts) { create_list( :post, 3, subs: [ sub ] )}
+    before do
+      create_list( :vote, 3, votable: posts[1] )
+      create_list( :vote, 2, votable: posts[0] )
     end
-    let(:sub) do
-      Sub.create!(
-          name: "Main",
-          title: "Main", 
-          description: "For talking about everything.",
-          moderator: users.first
-        )
-    end
-    let(:posts) do 
-      p = []
-      3.times do |i|
-        p << Post.create!(
-          title: "Post_#{i+1}",
-          content: "Post contents",
-          subs: [sub],
-          author: users.first
-        )
-      end
-      p
-    end
-    let!(:votes) do
-      posts.each_with_index do |post, i|
-        i.times { |j| Vote.create!(votable: posts[i], voter: users[j]) }
-      end
-    end
-    subject(:sorted_posts) { sub.posts.sort_by_votes }
+    subject(:sorted_posts) { sub.posts.with_votes.sort_by_votes }
+
     describe "#sort_by_votes scope" do
+
       it "should return posts sorted by their total vote score" do
-        expect(sorted_posts).to eq(posts.reverse)
+        expect(sorted_posts).to eq([ posts[1], posts[0], posts[2]])
       end
+
       it "should return posts with a score psuedo-attribute" do
-        expect(sorted_posts.first.vote_sum).to eq(2)
+        expect(sorted_posts.first.vote_sum).to eq(3)
         expect(sorted_posts.last.vote_sum).to eq(0)
       end
     end
