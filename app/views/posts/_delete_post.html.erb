@@ -1,4 +1,4 @@
-<% delete_url = sub ? post_sub_url(post.get_post_sub(sub)) : post_url(post) %>
+<% delete_url = @sub ? post_sub_url( post.get_post_sub( @sub )) : post_url( post ) %>
 <form action="<%= delete_url %>" method="post">
   <%= csrf_token %>
   <input type="hidden" name="_method" value="delete">
