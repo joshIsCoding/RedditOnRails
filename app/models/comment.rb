@@ -14,9 +14,8 @@ class Comment < ApplicationRecord
 
   scope :with_votes_and_authors, -> do
     with_authors
-    .select( "comments.*, COALESCE(SUM(votes.value), 0) AS vote_sum" )
-    .left_joins(:votes)
-    .group("#{self.table_name}.id, users.username")
+    .with_votes
+    .group("users.username")
   end
 
   scope :top_level, -> { where(parent_comment_id: nil) }
