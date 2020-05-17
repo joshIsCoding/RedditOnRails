@@ -3,13 +3,15 @@
     <h6 class="author">
       <%= index_comment ? comment.author_name : comment.author.username %>
     </h6>
-    <data class="votes" value="0"># votes</data>
+    <data class="votes" value="<%= comment_votes %>">
+      <%= comment_votes %> votes</data>
     <time 
       datetime="<%= comment.created_at.strftime("%Y-%m-%dT%H:%M") %>"
       title="<%= comment.created_at.strftime("%Y-%m-%d at %I:%M %p") %>">
       <%= time_ago_in_words(comment.created_at) %>
     </time>
   </header>
+  <%= render 'shared/vote_widget', target: comment %>
   <p class="comment-contents"><%= comment.contents %></p>
   
   <footer>
@@ -26,7 +28,8 @@
   <% @comments[comment.id].each do |child_comment| %>
     <li>
       <%= render "comments/comment", 
-          comment: child_comment, 
+          comment: child_comment,
+          comment_votes: child_comment.vote_sum,
           index_comment: true,
           current_user_mod: current_user_mod,
           level: level + 1 %>
