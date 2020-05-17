@@ -14,50 +14,22 @@ RSpec.describe Comment, type: :model do
   end
 
   describe "Votes and Related Methods" do
-    let(:users) do
-      u = []
-      3.times {|i| u << User.create!(username: "user_#{i+1}", password: "password")}
-      u
+    let( :post ) { create :post }
+    let(:comments) { create_list( :comment, 3, post: post ) }
+    before do
+      create_list( :vote, 3, votable: comments[1] )
+      create_list( :vote, 2, votable: comments.last )
     end
-    let(:sub) do
-      Sub.create!(
-          name: "Main",
-          title: "Main", 
-          description: "For talking about everything.",
-          moderator: users.first
-        )
-    end
-    let(:post) do
-      Post.create!(
-        title: "Main Post",
-        content: "User's Post",
-        subs: [sub],
-        author: users.first
-      )
-    end
-    let(:comments) do 
-      c = []
-      3.times do |i|
-        c << Comment.create!(
-          post: post,
-          contents: "Great comment #{i}",
-          author: users.first
-        )
-      end
-      c
-    end
-    let!(:votes) do
-      comments.each_with_index do |post, i|
-        i.times { |j| Vote.create!(votable: comments[i], voter: users[j]) }
-      end
-    end
-    subject(:sorted_comments) { post.comments.sort_by_votes }
+    subject(:sorted_comments) { post.comments.with_votes.sort_by_votes }
+
     describe "#sort_by_votes scope" do
-      it "should return comments sorted by their total vote score" do
-        expect(sorted_comments).to eq(comments.reverse)
+
+      it "should return comments sorted in descending order by their total vote score" do
+        expect(sorted_comments).to eq([comments[1], comments[2], comments[0]])
       end
+
       it "should return comments with a score psuedo-attribute" do
-        expect(sorted_comments.first.vote_sum).to eq(2)
+        expect(sorted_comments.first.vote_sum).to eq(3)
         expect(sorted_comments.last.vote_sum).to eq(0)
       end
     end
