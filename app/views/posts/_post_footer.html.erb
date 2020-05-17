@@ -1,8 +1,8 @@
 <footer><p># Comments Give Award Share</p>
 <% if post.author == current_user %>
   <%= link_to "Edit Post", edit_post_url(post) %>
-  <%= render "posts/delete_post", post: post, sub: sub %>
-<% elsif sub && sub.moderator == current_user %>
-  <%= render "posts/delete_post", post: post, sub: sub %> 
+  <%= render "posts/delete_post", post: post %>
+<% elsif @sub && @sub.moderator == current_user %>
+  <%= render "posts/delete_post", post: post %> 
 <% end %>
 </footer>
