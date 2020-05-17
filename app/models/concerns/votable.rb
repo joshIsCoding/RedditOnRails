@@ -4,7 +4,6 @@ module Votable
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :vote_sum
     has_many :votes, as: :votable, dependent: :destroy
 
     scope :with_votes, -> do
@@ -12,7 +11,9 @@ module Votable
       .left_joins(:votes)
       .group("#{self.table_name}.id")
     end
-    scope :sort_by_votes, -> { with_votes.order(vote_sum: :desc) }
+
+    # must be chained to ::with_votes
+    scope :sort_by_votes, -> { order( vote_sum: :desc ) }
   end
 
   def vote( type = :up, user )
