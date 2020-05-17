@@ -234,7 +234,10 @@ RSpec.describe "Post CRUD", type: :system do
 
         it "doesn't delete the whole post if deleted at the sub level" do
           visit(sub_path(main_sub))
-          click_button("Delete Post", match: :first)
+          post_sub_id = multi_sub_post.get_post_sub( main_sub ).id
+          within( find( 'form') { |f| f['action'].match?(/post_subs\/#{post_sub_id}$/) }) do
+            click_button("Delete Post", match: :first)
+          end
           expect(page).to have_current_path(sub_path(main_sub))
           expect(page).to have_content("Post deleted from this sub.")
           expect(page).not_to have_content(multi_sub_post.title)
