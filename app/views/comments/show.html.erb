@@ -1,6 +1,7 @@
 <h1>Reply to Comment</h1>
 <%= render "comments/comment", 
     comment: @comment,
+    comment_votes: @comment.votes.sum( :value ),
     index_comment: false,
     current_user_mod: current_user_is_mod?(@comment.post)
 %>
