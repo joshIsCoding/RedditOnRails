@@ -4,6 +4,7 @@
     <li>
     <%= render "comments/comment", 
         comment: comment, 
+        comment_votes: comment.vote_sum,
         index_comment: true,
         current_user_mod: current_user_is_mod?(@post),
         level: 1 %>
